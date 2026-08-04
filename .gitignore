@@ -1,0 +1,6 @@
+# Secrets
+.env
+
+# Install packages
+**/*.deb
+**/*.log
