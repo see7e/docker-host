@@ -4,3 +4,6 @@
 # Install packages
 **/*.deb
 **/*.log
+
+# Data
+data/
