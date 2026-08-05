@@ -57,6 +57,37 @@ services:
     networks:
       - monitoring
 
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    restart: unless-stopped
+
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker:/var/lib/docker:ro
+      - /dev/disk:/dev/disk:ro
+
+    privileged: true
+
+    devices:
+      - /dev/kmsg
+
+    command:
+      - "--docker_only=true"
+      - "--housekeeping_interval=30s"
+      - "--max_housekeeping_interval=35s"
+      - "--store_container_labels=false"
+
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8080/healthz"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+    networks:
+      - monitoring
+
 networks:
   monitoring:
     external: true
