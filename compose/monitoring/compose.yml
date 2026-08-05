@@ -12,7 +12,7 @@ services:
       - "9090:9090"
 
     volumes:
-      - /mnt/omv/.infra/docker/prometheus/data:/prometheus
+      - /opt/docker/data/prometheus:/prometheus
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
 
     healthcheck:
@@ -41,7 +41,7 @@ services:
       - "3000:3000"
 
     volumes:
-      - /mnt/omv/.infra/docker/grafana/data:/var/lib/grafana
+      - /opt/docker/data/grafana:/var/lib/grafana
       - ./grafana/provisioning:/etc/grafana/provisioning:ro
       - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
 
