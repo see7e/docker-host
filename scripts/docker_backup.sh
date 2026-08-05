@@ -10,7 +10,7 @@ COMPOSE_DIR="/opt/docker/compose/monitoring"
 PROMETHEUS_DATA="/var/lib/docker-services/prometheus"
 GRAFANA_DATA="/var/lib/docker-services/grafana"
 
-BACKUP_ROOT="/mnt/omv/backups/docker"
+BACKUP_ROOT="/mnt/omv/.infra/backups/docker"
 
 RETENTION_DAYS=14
 

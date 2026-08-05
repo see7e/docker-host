@@ -86,72 +86,65 @@ Verify:
 * Prometheus UI
 * Prometheus datasource
 
+> [!error]
 > Based on the problem had with the NFS (`root_squash`) permissions, will need to make some modifications.
-I think that's the right long-term architecture. It follows the principle of keeping stateful databases on local storage while using network storage for durable backups. Updated storage layout:
-
-```text
-Proxmox
-│
-├── OMV VM
-│   └── Shared Storage (NFS)
-│       ├── backups/
-│       │   ├── prometheus/
-│       │   ├── grafana/
-│       │   ├── loki/
-│       │   └── docker-host/
-│       └── ...
-│
-└── Docker Host VM
-    ├── OS Disk
-    │
-    ├── /var/lib/prometheus      ← TSDB (local)
-    ├── /var/lib/grafana         ← SQLite DB (local)
-    ├── /var/lib/loki            ← Log index (local)
-    ├── /opt/docker/compose
-    └── /mnt/omv                 ← NFS mount (backups only)
-```
-
-Why this is better:
-
-| Component          | Storage                 | Reason                                        |
-| ------------------ | ----------------------- | --------------------------------------------- |
-| Prometheus TSDB    | Local SSD/virtual disk  | High write rate, mmap files, best performance |
-| Grafana DB         | Local                   | Small SQLite database, low latency            |
-| Loki               | Local                   | Lots of sequential writes                     |
-| Dashboards/Configs | Git + Compose directory | Easy to version control                       |
-| Backups            | OMV NFS                 | Centralized, redundant storage                |
-
-This separates **live application data** from **backup storage**, which is a common production pattern.
-
-The [**backup job**](../scripts/prometheus_backup_job.sh) will be scheduled with `cron` timer to run overnight.  Grafana can follow the same pattern. Since it's much smaller than the TSDB, the backup is quick.
-
-The applications data will be stored at:
-```bash
-/opt/docker/data
-total 16
-drwxrwsr-x 4 dockeradmin dockeradmin 4096 Aug  5 08:35 .
-drwxr-sr-x 9 dockeradmin dockeradmin 4096 Aug  5 08:35 ..
-drwxrwsr-x 2 472         472         4096 Aug  5 08:35 grafana
-drwxrwsr-x 2 nobody      nogroup     4096 Aug  5 08:35 prometheus
-```
-
-> `472` is Grafana's container user and `nobody` is from Prometheus service: `uid=65534(nobody) gid=65534(nogroup)`.
-
-
-
-
-
-
-
-
-
-
-
+> I think that's the right long-term architecture. It follows the principle of keeping stateful databases on local storage while using network storage for durable backups. Updated storage layout:
+> ```text
+> Proxmox
+> │
+> ├── OMV VM
+> │   └── Shared Storage (NFS)
+> │       ├── backups/
+> │       │   ├── prometheus/
+> │       │   ├── grafana/
+> │       │   ├── loki/
+> │       │   └── docker-host/
+> │       └── ...
+> │
+> └── Docker Host VM
+>     ├── OS Disk
+>     │
+>     ├── /var/lib/prometheus      ← TSDB (local)
+>     ├── /var/lib/grafana         ← SQLite DB (local)
+>     ├── /var/lib/loki            ← Log index (local)
+>     ├── /opt/docker/compose
+>     └── /mnt/omv                 ← NFS mount (backups only)
+> ```
+> Why this is better:
+>
+> | Component          | Storage                 | Reason                                        |
+> | ------------------ | ----------------------- | --------------------------------------------- |
+> | Prometheus TSDB    | Local SSD/virtual disk  | High write rate, mmap files, best performance |
+> | Grafana DB         | Local                   | Small SQLite database, low latency            |
+> | Loki               | Local                   | Lots of sequential writes                     |
+> | Dashboards/Configs | Git + Compose directory | Easy to version control                       |
+> | Backups            | OMV NFS                 | Centralized, redundant storage                |
+>
+> This separates **live application data** from **backup storage**, which is a common production pattern.
+>
+> The [**backup job**](../scripts/prometheus_backup_job.sh) will be scheduled with `cron` timer to run overnight.  Grafana can follow the same pattern. Since it's much smaller than the TSDB, the backup is quick.
+>
+> The applications data will be stored at:
+> ```bash
+> /opt/docker/data
+> total 16
+> drwxrwsr-x 4 dockeradmin dockeradmin 4096 Aug  5 08:35 .
+> drwxr-sr-x 9 dockeradmin dockeradmin 4096 Aug  5 08:35 ..
+> drwxrwsr-x 2 472         472         4096 Aug  5 08:35 grafana
+> drwxrwsr-x 2 nobody      nogroup     4096 Aug  5 08:35 prometheus
+> ```
+> > `472` is Grafana's container user and `nobody` is from Prometheus service: `uid=65534(nobody) gid=65534(nogroup)`.
 
 
 ### Phase 2
 Add:
-* Node Exporter
+* [Node Exporter](./node_exporter.md)
+
+> [!note]
+
+
+
+
 
 Confirm host metrics appear.
 
