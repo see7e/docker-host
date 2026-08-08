@@ -1,0 +1,5 @@
+nut:
+  server: 192.168.1.200
+  port: 3493
+  username: monuser
+  password: ${MONUSER_PASSWORD}
