@@ -14,6 +14,7 @@ services:
     volumes:
       - /opt/docker/data/prometheus:/prometheus
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./prometheus/secrets:/etc/prometheus/secrets:ro
 
     healthcheck:
       test: ["CMD", "wget", "--spider", "-q", "http://localhost:9090/-/healthy"]
@@ -184,7 +185,7 @@ services:
     # Stable v1
     image: hon95/prometheus-nut-exporter:1
     environment:
-      - TZ=Europe/Oslo
+      - TZ=${TZ}
       - HTTP_PATH=/metrics
       # Defaults
       #- RUST_LOG=info
