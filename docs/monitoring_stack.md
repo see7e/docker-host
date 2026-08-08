@@ -6,7 +6,7 @@ flowchart TB
             NE["Node Exporter"]
             CA["cAdvisor"]
             PR["Prometheus"]
-            PT["Promtail"]
+            AL["Alloy"]
             GF["Grafana"]
             LK["Loki"]
         end
@@ -16,7 +16,7 @@ flowchart TB
     CA -->|metrics| PR
     PR -->|metrics| GF
 
-    PT -->|Docker logs| LK
+    AL -->|Docker logs| LK
     LK --> GF
 ```
 
@@ -28,7 +28,7 @@ Each component has a single responsibility:
 | cAdvisor      | Container metrics                            |
 | Prometheus    | Time-series database                         |
 | Loki          | Log storage                                  |
-| Promtail      | Log collection                               |
+| Alloy         | Log collection                               |
 | Grafana       | Dashboards and visualization                 |
 
 # Directory Layout
@@ -47,7 +47,7 @@ Since we've standardized storage, I'd use:
 ├── loki/
 │   ├── data/
 │   └── config.yml
-├── promtail/
+├── alloy/
 │   └── config.yml
 └── cadvisor/
 ```
@@ -157,26 +157,9 @@ Confirm container metrics appear.
 ### Phase 4
 Add:
 * Loki
-* Promtail
+* Alloy
 
-Confirm logs arrive in Grafana.
-
-This staged approach makes troubleshooting much easier than deploying everything in one go.
-
-# Versions
-I recommend pinning images to major versions rather than using `latest`.
-
-For example:
-```yaml
-grafana/grafana:12
-prom/prometheus:v3
-grafana/loki:3
-grafana/promtail:3
-gcr.io/cadvisor/cadvisor:v0.53
-prom/node-exporter:v1.10
-```
-
-This reduces the chance of unexpected breaking changes while still allowing minor and patch updates.
+Confirm logs arrive in Grafana. This staged approach makes troubleshooting much easier than deploying everything in one go.
 
 # Ports
 Only expose services you actually use from your workstation. Initially:
@@ -186,7 +169,7 @@ Only expose services you actually use from your workstation. Initially:
 | Grafana    | 3000 |
 | Prometheus | 9090 |
 
-Loki, Promtail, Node Exporter, and cAdvisor don't need to be directly accessible from your LAN. They only need to communicate within the `monitoring` Docker network.
+Loki, Alloy, Node Exporter, and cAdvisor don't need to be directly accessible from your LAN. They only need to communicate within the `monitoring` Docker network.
 
 # Configuration Strategy
 I'd also keep configuration under version control:
@@ -199,7 +182,7 @@ compose/monitoring/
 │   └── prometheus.yml
 ├── loki/
 │   └── config.yml
-└── promtail/
+└── alloy/
     └── config.yml
 ```
 
@@ -214,5 +197,5 @@ This separation is valuable because rebuilding the monitoring stack becomes as s
 
 All your dashboards, metrics, and logs remain on the NAS.
 
-## My suggestion for the next step
+## My suggestion for the next step (after finish setup)
 Instead of writing a single large `compose.yml`, I'd build this stack incrementally. We'll start with **Prometheus and Grafana only**, verify they're working correctly, and then layer in the remaining components. By the end, you'll have a monitoring stack that also serves as the template for every future Compose project in your homelab.

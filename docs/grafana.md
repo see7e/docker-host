@@ -205,8 +205,6 @@ or
 node_thermal_zone_temp
 ```
 
-
-
 ## Explore metrics interactively
 A very useful trick while learning is to use **Grafana Explore**:
 1. Open **Explore**
