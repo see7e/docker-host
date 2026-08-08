@@ -18,7 +18,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 0,
+  "id": 1,
   "links": [],
   "panels": [
     {
@@ -633,7 +633,10 @@
   ],
   "preload": false,
   "schemaVersion": 42,
-  "tags": [],
+  "tags": [
+    "Docker",
+    "Node Exporter"
+  ],
   "templating": {
     "list": []
   },
@@ -643,7 +646,7 @@
   },
   "timepicker": {},
   "timezone": "browser",
-  "title": "Node Exporter",
+  "title": "Docker Node Exporter",
   "uid": "adtjjk4",
-  "version": 12
+  "version": 13
 }
