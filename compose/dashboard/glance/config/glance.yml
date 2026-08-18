@@ -1,0 +1,68 @@
+pages:
+  - name: Startpage
+    width: slim
+    hide-desktop-navigation: true
+    center-vertically: true
+    columns:
+      - size: full
+        widgets:
+          - type: search
+            autofocus: true
+
+          - type: monitor
+            cache: 1m
+            title: Services
+            sites:
+              - title: Grafana Dashboards
+                url: http://192.168.1.108:3000/dashboards/f/efua9rpy0zrwgf/?orgId=1
+                icon: si:grafana
+              - title: Home Assistant
+                url: http://192.168.1.111/home/overview
+                icon: si:homeassistant
+              - title: OpenMediaVault
+                url: http://192.168.1.107/#/login
+                icon: si:openmediavault
+              - title: Proxmox
+                url: https://192.168.1.200:8006/
+                icon: si:proxmox
+              - title: Prometheus
+                url: http://192.168.1.108:9090/targets
+                icon: si:prometheus
+              # - title: Jellyfin
+              #   url: https://yourdomain.com/
+              #   icon: si:jellyfin
+              # - title: Gitea
+              #   url: https://yourdomain.com/
+              #   icon: si:gitea
+              # - title: qBittorrent # only for Linux ISOs, of course
+              #   url: https://yourdomain.com/
+              #   icon: si:qbittorrent
+              # - title: Immich
+              #   url: https://yourdomain.com/
+              #   icon: si:immich
+              # - title: AdGuard Home
+              #   url: https://yourdomain.com/
+              #   icon: si:adguard
+              # - title: Vaultwarden
+              #   url: https://yourdomain.com/
+              #   icon: si:vaultwarden
+
+          - type: bookmarks
+            groups:
+              - title: General
+                links:
+                  - title: Gmail
+                    url: https://mail.google.com/mail/u/0/
+                  - title: Amazon
+                    url: https://www.amazon.es/
+                  - title: Github
+                    url: https://github.com/
+              - title: Entertainment
+                links:
+                  - title: YouTube
+                    url: https://www.youtube.com/
+              - title: Social
+                links:
+                  - title: Reddit
+                    url: https://www.reddit.com/
+
