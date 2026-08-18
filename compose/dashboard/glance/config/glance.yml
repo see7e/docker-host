@@ -28,9 +28,9 @@ pages:
               - title: Prometheus
                 url: http://192.168.1.108:9090/targets
                 icon: si:prometheus
-              # - title: Jellyfin
-              #   url: https://yourdomain.com/
-              #   icon: si:jellyfin
+              - title: Jellyfin
+                url: http://192.168.1.108:8096
+                icon: si:jellyfin
               # - title: Gitea
               #   url: https://yourdomain.com/
               #   icon: si:gitea

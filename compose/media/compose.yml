@@ -1,0 +1,25 @@
+services:
+  jellyfin:
+    image: jellyfin/jellyfin:latest
+    container_name: jellyfin
+    restart: unless-stopped
+
+    ports:
+      - "8096:8096"
+
+    volumes:
+      - /opt/docker/data/jellyfin/config:/config
+      - /opt/docker/data/jellyfin/cache:/cache
+
+      - /mnt/omv/shared/media/movies:/media/movies:ro
+      - /mnt/omv/shared/media/shows:/media/shows:ro
+      - /mnt/omv/shared/media/music:/media/music:ro
+      - /mnt/omv/shared/media/photos:/media/photos:ro
+      - /mnt/omv/shared/media/books:/media/books:ro
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8096/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
