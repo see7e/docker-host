@@ -14,7 +14,7 @@ pages:
             title: Services
             sites:
               - title: Grafana Dashboards
-                url: http://192.168.1.108:3000/dashboards/f/efua9rpy0zrwgf/?orgId=1
+                url: http://192.168.1.108:3000/dashboards/
                 icon: si:grafana
               - title: Home Assistant
                 url: http://192.168.1.111/home/overview
