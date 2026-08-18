@@ -1,0 +1,163 @@
+groups:
+  - name: infrastructure
+    interval: 30s
+
+    rules:
+
+      # ------------------------------------------------------------
+      # Targets
+      # ------------------------------------------------------------
+
+      - alert: TargetDown
+        expr: up == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Prometheus target is down"
+          description: "{{ $labels.job }} target {{ $labels.instance }} has been down for more than 2 minutes."
+
+      # ------------------------------------------------------------
+      # Docker host
+      # ------------------------------------------------------------
+
+      - alert: HostHighCPU
+        expr: 100 - (avg by (instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 85
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High CPU usage on {{ $labels.instance }}"
+          description: "CPU usage has been above 85% for more than 10 minutes."
+
+      - alert: HostCriticalCPU
+        expr: 100 - (avg by (instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 95
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Critical CPU usage on {{ $labels.instance }}"
+          description: "CPU usage has been above 95% for more than 5 minutes."
+
+      - alert: HostHighMemory
+        expr: |
+          (
+            1 -
+            node_memory_MemAvailable_bytes /
+            node_memory_MemTotal_bytes
+          ) * 100 > 90
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High memory usage on {{ $labels.instance }}"
+          description: "Memory usage has been above 90% for more than 10 minutes."
+
+      # ------------------------------------------------------------
+      # Filesystems
+      # ------------------------------------------------------------
+
+      - alert: HostDiskAlmostFull
+        expr: |
+          (
+            1 -
+            node_filesystem_avail_bytes{
+              fstype!~"tmpfs|overlay|squashfs|proc|sysfs|devtmpfs|devpts|cgroup.*"
+            }
+            /
+            node_filesystem_size_bytes{
+              fstype!~"tmpfs|overlay|squashfs|proc|sysfs|devtmpfs|devpts|cgroup.*"
+            }
+          ) * 100 > 85
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Disk usage high on {{ $labels.instance }}: {{ $labels.mountpoint }}"
+          description: "Filesystem {{ $labels.mountpoint }} is {{ $value | printf \"%.1f\" }}% full."
+
+      - alert: HostDiskCritical
+        expr: |
+          (
+            1 -
+            node_filesystem_avail_bytes{
+              fstype!~"tmpfs|overlay|squashfs|proc|sysfs|devtmpfs|devpts|cgroup.*"
+            }
+            /
+            node_filesystem_size_bytes{
+              fstype!~"tmpfs|overlay|squashfs|proc|sysfs|devtmpfs|devpts|cgroup.*"
+            }
+          ) * 100 > 95
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Disk critically full on {{ $labels.instance }}: {{ $labels.mountpoint }}"
+          description: "Filesystem {{ $labels.mountpoint }} is {{ $value | printf \"%.1f\" }}% full."
+
+      # ------------------------------------------------------------
+      # UPS / NUT
+      # ------------------------------------------------------------
+
+      - alert: UPSOnBattery
+        expr: nut_ups_status{status="OB"} == 1
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "UPS {{ $labels.ups }} is running on battery"
+          description: "UPS {{ $labels.ups }} has been running on battery for more than 2 minutes."
+
+      - alert: UPSBatteryLow
+        expr: nut_battery_charge < 0.30
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "UPS {{ $labels.ups }} battery is low"
+          description: "UPS battery charge is below 30% (current: {{ $value | humanizePercentage }})."
+
+      - alert: UPSBatteryCritical
+        expr: nut_battery_charge < 0.15
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "UPS {{ $labels.ups }} battery is critically low"
+          description: "UPS battery charge is below 15% (current: {{ $value | humanizePercentage }})."
+
+      - alert: UPSLowBatteryState
+        expr: nut_ups_status{status="LB"} == 1
+        for: 30s
+        labels:
+          severity: critical
+        annotations:
+          summary: "UPS {{ $labels.ups }} reports low battery"
+          description: "The UPS has entered its low-battery state."
+
+      - alert: UPSUnavailable
+        expr: absent(nut_ups_info)
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "UPS monitoring is unavailable"
+          description: "Prometheus has not received UPS information from the NUT exporter for more than 2 minutes."
+
+      - alert: UPSHighLoad
+        expr: nut_load > 0.80
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "UPS load is high"
+          description: "UPS {{ $labels.ups }} load has been above 80% for more than 10 minutes."
+
+      - alert: UPSCriticalLoad
+        expr: nut_load > 0.95
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "UPS load is critically high"
+          description: "UPS {{ $labels.ups }} load has been above 95% for more than 2 minutes."
