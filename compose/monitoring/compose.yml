@@ -185,6 +185,7 @@ services:
   nut-exporter:
     # Stable v1
     image: hon95/prometheus-nut-exporter:1
+    restart: unless-stopped
     environment:
       - TZ=${TZ}
       - HTTP_PATH=/metrics
@@ -194,6 +195,14 @@ services:
       #- HTTP_PATH=/nut
       #- LOG_REQUESTS_CONSOLE=false
       #- PRINT_METRICS_AND_EXIT=false
+
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://127.0.0.1:9221/metrics || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
     networks:
       - monitoring
 

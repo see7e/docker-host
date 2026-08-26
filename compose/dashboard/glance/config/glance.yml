@@ -4,6 +4,29 @@ pages:
     hide-desktop-navigation: true
     center-vertically: true
     columns:
+
+      - size: small
+        widgets:
+          - type: calendar
+            first-day-of-week: monday
+            
+          - type: weather
+            location: Porto, Portugal
+            units: metric
+            hour-format: 24h
+            hide-location: true
+
+          - type: server-stats
+            servers:
+              - type: local
+                name: Services
+                
+          # - type: dns-stats
+          #   service: adguard
+          #   url: https://adguard.domain.com/
+          #   username: admin
+          #   password: {ADGUARD_PASSWORD}
+          
       - size: full
         widgets:
           - type: search
@@ -25,12 +48,31 @@ pages:
               - title: Proxmox
                 url: https://192.168.1.200:8006/
                 icon: si:proxmox
-              - title: Prometheus
-                url: http://192.168.1.108:9090/targets
-                icon: si:prometheus
+              # - title: Prometheus
+              #   url: http://192.168.1.108:9090/targets
+              #   icon: si:prometheus
+
+          - type: monitor
+            cache: 1m
+            title: Media
+            sites:
               - title: Jellyfin
                 url: http://192.168.1.108:8096
                 icon: si:jellyfin
+                
+              - title: Bazarr (for subs)
+                url: http://192.168.1.108:6767
+                icon: si:bazarr
+
+              - title: Radarr (for Movies)
+                url: http://192.168.1.108:7878
+                icon: si:radarr
+
+              - title: Sonarr (for Shows)
+                url: http://192.168.1.108:8989
+                icon: si:sonarr
+
+          # - type: group
               # - title: Gitea
               #   url: https://yourdomain.com/
               #   icon: si:gitea
@@ -58,10 +100,12 @@ pages:
                   - title: Github
                     url: https://github.com/
               - title: Entertainment
+                color: 10 70 50
                 links:
                   - title: YouTube
                     url: https://www.youtube.com/
               - title: Social
+                color: 200 50 50
                 links:
                   - title: Reddit
                     url: https://www.reddit.com/

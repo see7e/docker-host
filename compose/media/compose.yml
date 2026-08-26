@@ -23,3 +23,87 @@ services:
       timeout: 10s
       retries: 5
       start_period: 60s
+
+    networks:
+      - media
+
+
+  bazarr:
+    image: lscr.io/linuxserver/bazarr:latest
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    restart: unless-stopped
+
+    volumes:
+      - /opt/docker/data/bazarr/config:/config
+
+      - /mnt/omv/shared/media/movies:/media/movies
+      - /mnt/omv/shared/media/shows:/media/shows
+
+    ports:
+      - "6767:6767"       # temporarily Bazarr
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:6767/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+    networks:
+      - media
+
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: sonarr
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    restart: unless-stopped
+    volumes:
+      - /opt/docker/data/sonarr:/config
+      - /mnt/omv/shared/media/shows:/media/shows
+    networks:
+      - media
+
+    ports:
+      - "8989:8989"       # temporarily Sonarr
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8989/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  radarr:
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: radarr
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    restart: unless-stopped
+    volumes:
+      - /opt/docker/data/radarr:/config
+      - /mnt/omv/shared/media/movies:/media/movies
+    networks:
+      - media
+
+    ports:
+      - "7878:7878"       # temporarily Radarr
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:7878/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+
+networks:
+  media:
+    driver: bridge
