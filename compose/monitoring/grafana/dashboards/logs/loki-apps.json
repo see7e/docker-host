@@ -272,7 +272,7 @@
             "uid": "loki"
           },
           "editorMode": "code",
-          "expr": "{container=~\"${container}\"}",
+          "expr": "{container=~\"${container}\"} |= \"level=error\"",
           "queryType": "range",
           "refId": "A"
         }
