@@ -227,16 +227,3 @@ Grafana will autocomplete all available metrics. You'll discover hundreds of met
 - ...
 
 This is the fastest way to learn what Node Exporter exposes.
-
-## Suggested next steps for your homelab
-Based on the architecture you've been building, I'd add monitoring in this order:
-1. ✅ Docker Host (completed)
-2. **cAdvisor** — per-container CPU, RAM, network, filesystem metrics
-3. **Promtail + Loki** — centralized logs
-4. **Proxmox VE Exporter** — monitor your hypervisor
-5. **OpenMediaVault metrics** — storage health and usage
-6. **Home Assistant metrics** — automation and entity insights
-7. **UPS (NUT exporter)** — battery level, runtime, and power events
-8. **Raspberry Pi Node Exporter** — infrastructure-wide host monitoring
-
-By the end, Grafana can provide a single pane of glass for your entire homelab, showing the physical server, Proxmox, VMs, Docker containers, storage, UPS, and smart home services together.
