@@ -1,0 +1,35 @@
+services:
+  mealie:
+    image: ghcr.io/mealie-recipes/mealie:v3.26.0
+    container_name: mealie
+    restart: unless-stopped
+    mem_limit: 1000m
+
+    ports:
+      - "9925:9000"
+
+    volumes:
+      - /opt/docker/data/mealie:/app/data
+
+    environment:
+      TZ: ${TZ}
+      ALLOW_SIGNUP: "false"
+      PUID: ${PUID}
+      PGID: ${PGID}
+      DEFAULT_EMAIL: ${DEFAULT_EMAIL}
+      DEFAULT_GROUP: ${DEFAULT_GROUP}
+      DEFAULT_HOUSEHOLD: ${DEFAULT_HOUSEHOLD}
+      DB_ENGINE: "sqlite"
+      BASE_URL: "http://192.168.1.108:9000" # Used for notifications and the OIDC callback url
+
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:9000/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+    networks:
+      - health
+
+networks:
+  health:

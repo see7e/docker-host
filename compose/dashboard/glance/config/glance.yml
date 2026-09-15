@@ -72,10 +72,13 @@ pages:
                 url: http://192.168.1.108:8989
                 icon: si:sonarr
 
-          # - type: group
-              # - title: Gitea
-              #   url: https://yourdomain.com/
-              #   icon: si:gitea
+          - type: monitor
+            cache: 1m
+            title: Health
+            sites:
+              - title: Mealie
+                url: http://192.168.1.108:9925/g/umagrandefamilia
+                icon: si:mealie
               # - title: qBittorrent # only for Linux ISOs, of course
               #   url: https://yourdomain.com/
               #   icon: si:qbittorrent
