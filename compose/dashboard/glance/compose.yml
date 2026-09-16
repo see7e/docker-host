@@ -3,6 +3,8 @@ services:
     container_name: glance
     image: glanceapp/glance
     restart: unless-stopped
+    mem_limit: 100m
+
     volumes:
       - ./config:/app/config
     ports:
